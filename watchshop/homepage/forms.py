@@ -1,4 +1,4 @@
-from .models import WatchUpload
+from .models import WatcheUpload
 from django import forms
 
 class uploadform(forms.ModelForm):
@@ -25,5 +25,5 @@ class uploadform(forms.ModelForm):
 
 
     class Meta:
-        model= WatchUpload
+        model= WatcheUpload
         fields= ['name','description','price','image']

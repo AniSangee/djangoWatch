@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import Watches, WatchUpload, Wishlists
+from .models import Watches, WatcheUpload
 from .forms import uploadform
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def Home(request):
-    watches= WatchUpload.objects.all()
+    watches= WatcheUpload.objects.all()
     context= {'watch': watches}
     return render(request,'home.html',context)
 
@@ -64,21 +64,5 @@ def Logout(request):
 
 from django.shortcuts import get_object_or_404
 def ShowProduct(request, id):
-    product = get_object_or_404(WatchUpload, id=id)
+    product = get_object_or_404(WatcheUpload, id=id)
     return render(request,'product.html',{'product':product})
-
-def addtowish(request, id):
-    user = request.user
-    product = WatchUpload.objects.get(id=id)
-    obj1, created  = Wishlists.objects.get_or_create(user=user)
-    obj1.products.add(product)
-    obj1.save()
-    return redirect('home')
-
-def showlist(request):
-     user = request.user
-     wish_obj =Wishlists.objects.get(user=user)
-     return render(request,'wishlist.html',{'userproduct':wish_obj})
-
-def addtocart(request,id):
-    return redirect('home')

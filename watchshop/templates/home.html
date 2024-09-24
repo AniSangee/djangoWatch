@@ -49,8 +49,6 @@
         <p class="card-text">{{item.description}}</p>
         <p class="card-text">{{item.price}}</p>
         <a href="{% url 'product' id=item.id %}" class="btn btn-primary">view product</a>
-        <a href="{% url 'addtowish' id=item.id %}" class="btn btn-primary">+wishlist</a>
-        <a href="{% url 'addtocart' id=item.id %}" class="btn btn-primary c-button">+cart</a>
       </div>
   </div>  
   {% endfor %}
