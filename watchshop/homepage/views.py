@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import Watches,WatchUpload, Wishlist,Cart,CartItem
+from .models import Watches,WatchUpload, Wishlist,Cart,CartItem,WatchReview
 # Create your views here.
 def Home(request):
     watches= WatchUpload.objects.all()
@@ -14,6 +14,7 @@ def About(request):
 from .forms import uploadform
 from django.contrib.auth.decorators import login_required
 
+# function based view
 @login_required(login_url="/login")
 def upload(request):
     if request.method == 'POST':
@@ -24,7 +25,22 @@ def upload(request):
     else:
         form = uploadform()
     return render(request,'watchUpload.html',{'form':form})
+# class based view 
+from django.views import View
+from django.utils.decorators import method_decorator
 
+class uploadClass(View):
+    @method_decorator(login_required(login_url="/login"))
+    def get(request):
+        form = uploadform()
+        return render(request,'watchUpload.html',{'form':form})
+    @method_decorator(login_required(login_url="/login"))
+    def post(request):
+         form = uploadform(request.POST,request.FILES)
+         if form.is_valid():
+            form.save()
+            return redirect('home')
+         return render(request,'watchUpload.html',{'form':form})
 # loginpage
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import authenticate, login, logout
@@ -65,8 +81,9 @@ def Logout(request):
 
 from django.shortcuts import get_object_or_404
 def ShowProduct(request, id):
-    products = get_object_or_404(WatchUpload, id=id)
-    return render(request,'product.html',{'product':products})
+    product = get_object_or_404(WatchUpload, id=id)
+    review =WatchReview.objects.filter(product=product)
+    return render(request,'product.html',{"product":product, "reviews":review})
 
 #Wishlist
 def addtowish(request, id):
@@ -105,13 +122,13 @@ def addtocart(request, id):
 def show_cart(request):
     user_cart, created = Cart.objects.get_or_create(user = request.user)
     cart_objects = user_cart.cartitem_set.all()
-    return render(request, "cart.html", {"user_products": cart_objects})
+    return render(request, "cart.html", {"user_product": cart_objects})
 
 def removeCart(request, id):
     product_rm = WatchUpload.objects.get(id=id)
-    cart_obj = Cart.objects.get(user=request.user)
+    cart_obj = Cart.objects.get(user = request.user)
     cart_obj.products.remove(product_rm)
-    return render(request, 'cart.html', {"user_products": cart_obj.products.all()})
+    return render(request, 'cart.html', {"user_product": cart_obj.products.all()})
     
 from django.http import JsonResponse
 def showdata(request):
