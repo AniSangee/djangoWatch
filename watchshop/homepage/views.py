@@ -120,13 +120,13 @@ def addtocart(request, id):
     return redirect('home')
 
 def show_cart(request):
-    user_cart, created = Cart.objects.get_or_create(user = request.user)
+    user_cart, created = Cart.objects.get_or_create(user=request.user)
     cart_objects = user_cart.cartitem_set.all()
     return render(request, "cart.html", {"user_products": cart_objects})
 
 def removeCart(request, id):
     product_rm = WatchUpload.objects.get(id=id)
-    cart_obj = Cart.objects.get(user = request.user)
+    cart_obj = Cart.objects.get(user= request.user)
     cart_obj.products.remove(product_rm)
     return render(request, 'cart.html', {"user_products": cart_obj.products.all()})
     

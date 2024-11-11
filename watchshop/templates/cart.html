@@ -27,7 +27,7 @@
         <button class="btn btn-outline-secondary" id="incrementBtn">+</button>
       </div>
 
-      <a href="{% url 'removeCart' id=item.id %}" class="btn btn-primary"
+      <a href="{% url 'removeCart' id=item.product.id %}" class="btn btn-primary"
         >Remove</a
       >
     </div>
@@ -59,4 +59,4 @@
   });
 </script>
 {% endfor %}
-{% endblock %}
+{% endblock %} 
